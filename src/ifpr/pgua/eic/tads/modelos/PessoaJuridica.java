@@ -26,6 +26,11 @@ public class PessoaJuridica extends Pessoa{
     public String getCnpj() {
         return cnpj;
     }
+
+    @Override
+    public String getDocumento(){
+        return this.cnpj;
+    }
     
 
 }

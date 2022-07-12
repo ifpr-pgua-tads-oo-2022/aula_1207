@@ -166,7 +166,7 @@ public class App {
                             saldo = scan.nextDouble();
                             ContaSimples contaSimples = new ContaSimples(numeroDaConta, agencia, senha, ativa, saldo,pessoaFisica);
 
-                            if(banco.cadastarContaSimples(contaSimples)){
+                            if(banco.cadastrarContaSimples(contaSimples)){
                                 System.out.println("Conta criada!!");
                             }else{
                                 System.out.println("Conta não criada!!");
@@ -204,7 +204,7 @@ public class App {
 
                             ContaEspecial contaEspecial = new ContaEspecial(numeroDaConta, agencia, senha, ativa, saldo,pessoaFisica1,limite);
 
-                            if(banco.cadastarContaEspecial(contaEspecial)){
+                            if(banco.cadastrarContaEspecial(contaEspecial)){
                                 System.out.println("Conta criada!!");
                             }else{
                                 System.out.println("Conta não criada!!");
@@ -242,7 +242,7 @@ public class App {
 
                             ContaPoupanca contaPoupanca = new ContaPoupanca(numeroDaConta, agencia, senha, ativa, saldo,pessoaFisica2,txRendimento);
 
-                            if(banco.cadastarContaPoupanca(contaPoupanca)){
+                            if(banco.cadastrarContaPoupanca(contaPoupanca)){
                                 System.out.println("Conta criada!!");
                             }else{
                                 System.out.println("Conta não criada!!");

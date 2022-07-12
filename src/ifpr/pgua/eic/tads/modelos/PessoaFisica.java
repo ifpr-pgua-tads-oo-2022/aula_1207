@@ -38,6 +38,11 @@ public class PessoaFisica extends Pessoa {
     public double getSalario() {
         return salario;
     }
+
+    @Override
+    public String getDocumento(){
+        return this.cpf;
+    }
     
     
 

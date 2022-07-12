@@ -7,11 +7,8 @@ public class Banco {
     private String nome;
     private String telefone;
     private String cnpj;
-    private ArrayList<PessoaFisica> pessoasFisica;
-    private ArrayList<PessoaJuridica> pessoasJuridica;  
-    private ArrayList<ContaSimples> contasSimples;
-    private ArrayList<ContaEspecial> contasEspeciais;
-    private ArrayList<ContaPoupanca> contasPoupancas;
+    private ArrayList<Pessoa> pessoas;
+    private ArrayList<Conta> contas;
     private int qtdePessoas;
     private int qtdeContas;
   
@@ -20,73 +17,65 @@ public class Banco {
         this.nome = nome;
         this.telefone = telefone;
         this.cnpj = cnpj;
-        pessoasFisica = new ArrayList<PessoaFisica>();
-        pessoasJuridica = new ArrayList<PessoaJuridica>();
+        pessoas = new ArrayList<Pessoa>();
         
         qtdePessoas = 0;
-        contasSimples = new ArrayList<>();
-        contasPoupancas = new ArrayList<>();
-        contasEspeciais = new ArrayList<>();
+        contas = new ArrayList<>();
         qtdeContas = 0;
 
     }
 
 
-    public PessoaFisica buscarPessoaFisica(String documento){
-        for(int i=0;i<pessoasFisica.size();i++){
-            if(pessoasFisica.get(i).getCpf().equals(documento)){
-                return pessoasFisica.get(i);
+    private Pessoa buscarPessoa(String documento){
+        for(int i=0;i<pessoas.size();i++){
+            /*if(pessoas.get(i) instanceof PessoaFisica){
+                PessoaFisica pf = (PessoaFisica) pessoas.get(i);
+                if(pf.getCpf().equals(documento)){
+                    return pessoas.get(i);
+                }
             }
+            if(pessoas.get(i) instanceof PessoaJuridica){
+                PessoaJuridica pj = (PessoaJuridica) pessoas.get(i);
+                if(pj.getCnpj().equals(documento)){
+                    return pessoas.get(i);
+                }
+            }*/
+
+
+            if(pessoas.get(i).getDocumento().equals(documento)){
+                return pessoas.get(i);
+            }
+            
         }
         return null;
+    }
+
+
+    public PessoaFisica buscarPessoaFisica(String documento){
+        return (PessoaFisica) buscarPessoa(documento);
     }
 
     public PessoaJuridica buscarPessoaJuridica(String documento){
-        for(int i=0;i<pessoasJuridica.size();i++){
-            if(pessoasJuridica.get(i).getCnpj().equals(documento)){
-                return pessoasJuridica.get(i);
-            }
-        }
-        return null;
+        return (PessoaJuridica) buscarPessoa(documento);
     }
 
-    public ContaSimples buscarContaSimples(int numero, int agencia){
 
-        for(ContaSimples conta:contasSimples){
+
+
+    public Conta buscarConta(int numero, int agencia){
+
+        for(Conta conta:contas){
             if(conta.getNumeroDaConta()==numero && conta.getAgencia()==agencia){
                 return conta;
             }
         }
-
-        return null;
-    }
-
-    public ContaEspecial buscarContaEspecial(int numero, int agencia){
-
-        for(ContaEspecial conta:contasEspeciais){
-            if(conta.getNumeroDaConta()==numero && conta.getAgencia()==agencia){
-                return conta;
-            }
-        }
-
-        return null;
-    }
-
-    public ContaPoupanca buscarContaPoupanca(int numero, int agencia){
-
-        for(ContaPoupanca conta:contasPoupancas){
-            if(conta.getNumeroDaConta()==numero && conta.getAgencia()==agencia){
-                return conta;
-            }
-        }
-
         return null;
     }
 
 
     public boolean cadastrarPessoaFisica(PessoaFisica pessoa){
         if(buscarPessoaFisica(pessoa.getCpf())== null){
-            this.pessoasFisica.add(pessoa);
+            this.pessoas.add(pessoa);
             qtdePessoas += 1;
             return true;
         }
@@ -95,7 +84,7 @@ public class Banco {
 
     public boolean cadastrarPessoaJuridica(PessoaJuridica pessoa){
         if(buscarPessoaJuridica(pessoa.getCnpj())== null){
-            this.pessoasJuridica.add(pessoa);
+            this.pessoas.add(pessoa);
             qtdePessoas += 1;
             return true;
         }
@@ -105,57 +94,94 @@ public class Banco {
 
 
     public ArrayList<PessoaFisica> getPessoasFisica(){
-        return pessoasFisica;
+        ArrayList<PessoaFisica> lista = new ArrayList<>();
+
+        for(Pessoa p:pessoas){
+            if(p instanceof PessoaFisica){
+                lista.add((PessoaFisica)p);
+            }
+        }
+        
+        
+        return lista;
     }
 
     public ArrayList<PessoaJuridica> getPessoasJuridica(){
-        return pessoasJuridica;
+        ArrayList<PessoaJuridica> lista = new ArrayList<>();
+
+        for(Pessoa p:pessoas){
+            if(p instanceof PessoaJuridica){
+                lista.add((PessoaJuridica)p);
+            }
+        }
+        
+        
+        return lista;
     }
 
 
-    public boolean cadastarContaSimples(ContaSimples conta){
-        if(buscarContaSimples(conta.getNumeroDaConta(), conta.getAgencia())==null){
-            this.contasSimples.add(conta);
+    private boolean cadastrarConta(Conta conta){
+        if(buscarConta(conta.getNumeroDaConta(), conta.getAgencia())==null){
+            this.contas.add(conta);
             qtdeContas += 1;
             return true;
         }
 
         return false;
+    }
+
+    public boolean cadastrarContaSimples(ContaSimples conta){
+        return cadastrarConta(conta);
         
     }
 
-    public boolean cadastarContaEspecial(ContaEspecial conta){
-        if(buscarContaEspecial(conta.getNumeroDaConta(), conta.getAgencia())==null){
-            this.contasEspeciais.add(conta);
-            qtdeContas += 1;
-            return true;
-        }
-
-        return false;
+    public boolean cadastrarContaEspecial(ContaEspecial conta){
+        return cadastrarConta(conta);
         
     }
 
-    public boolean cadastarContaPoupanca(ContaPoupanca conta){
-        if(buscarContaPoupanca(conta.getNumeroDaConta(), conta.getAgencia())==null){
-            this.contasPoupancas.add(conta);
-            qtdeContas += 1;
-            return true;
-        }
-
-        return false;
-        
+    public boolean cadastrarContaPoupanca(ContaPoupanca conta){
+        return cadastrarConta(conta);
     }
 
     public ArrayList<ContaSimples> getContasSimples(){
-        return contasSimples;
+        
+        ArrayList<ContaSimples> lista = new ArrayList<>();
+
+        for(Conta conta:contas){
+            if(conta instanceof ContaSimples){
+                ContaSimples cs = (ContaSimples)conta;
+                lista.add(cs);
+            }
+        }
+        
+        return lista;
     }
 
     public ArrayList<ContaEspecial> getContasEspeciais(){
-        return contasEspeciais;
+        ArrayList<ContaEspecial> lista = new ArrayList<>();
+
+        for(Conta conta:contas){
+            if(conta instanceof ContaEspecial){
+                ContaEspecial cs = (ContaEspecial)conta;
+                lista.add(cs);
+            }
+        }
+        
+        return lista;
     }
 
     public ArrayList<ContaPoupanca> getContasPoupancas(){
-        return contasPoupancas;
+        ArrayList<ContaPoupanca> lista = new ArrayList<>();
+
+        for(Conta conta:contas){
+            if(conta instanceof ContaPoupanca){
+                ContaPoupanca cs = (ContaPoupanca)conta;
+                lista.add(cs);
+            }
+        }
+        
+        return lista;
     }
  
     public String getNome() {
